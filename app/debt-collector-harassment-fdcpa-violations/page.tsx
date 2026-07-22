@@ -1,9 +1,12 @@
-import type { Metadata } from "next";
 import ArticleLayout from "@/components/ArticleLayout";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Debt Collector Harassment (FDCPA Violations)",
-};
+  description:
+    "Harassed by debt collectors? The FDCPA protects you from abusive collection practices. Gold Law defends consumers — you pay nothing unless we win.",
+  path: "/debt-collector-harassment-fdcpa-violations",
+});
 
 export default function FdcpaViolationsPage() {
   return (

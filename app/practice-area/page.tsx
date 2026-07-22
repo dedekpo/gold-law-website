@@ -1,13 +1,16 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import NewsletterForm from "@/components/NewsletterForm";
 import PageBanner from "@/components/PageBanner";
 import PracticeAreaCards from "@/components/PracticeAreaCards";
 import { UserTieIcon } from "@/components/icons";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Practice Area",
-};
+  description:
+    "Explore Gold Law's practice areas: TCPA robocall and text message violations, FDCPA debt collector harassment, false advertising, and data breaches.",
+  path: "/practice-area",
+});
 
 export default function PracticeAreaPage() {
   return (

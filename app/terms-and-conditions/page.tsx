@@ -1,10 +1,13 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import ArticleLayout from "@/components/ArticleLayout";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Terms and Conditions",
-};
+  description:
+    "The terms governing your use of chrisgoldlaw.com, including attorney advertising disclosures and our text messaging program.",
+  path: "/terms-and-conditions",
+});
 
 export default function TermsAndConditionsPage() {
   return (

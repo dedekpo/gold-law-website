@@ -1,13 +1,16 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import BadgesRow from "@/components/BadgesRow";
 import CheckList from "@/components/CheckList";
 import PageBanner from "@/components/PageBanner";
 import TcpaViolations from "@/components/TcpaViolations";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "About Us",
-};
+  description:
+    "Meet Christopher Gold, founder of Gold Law, P.A. — a Miami Beach consumer protection firm fighting robocalls, debt collector harassment, false advertising, and data breaches.",
+  path: "/about-us",
+});
 
 export default function AboutUsPage() {
   return (

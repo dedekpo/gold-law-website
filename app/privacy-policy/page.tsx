@@ -1,10 +1,13 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import ArticleLayout from "@/components/ArticleLayout";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Privacy Policy",
-};
+  description:
+    "How Gold Law, P.A. collects, uses, and protects your information when you visit chrisgoldlaw.com, submit a form, or opt in to text messages.",
+  path: "/privacy-policy",
+});
 
 export default function PrivacyPolicyPage() {
   return (

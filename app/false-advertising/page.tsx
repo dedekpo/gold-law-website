@@ -1,9 +1,12 @@
-import type { Metadata } from "next";
 import ArticleLayout from "@/components/ArticleLayout";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "False Advertising",
-};
+  description:
+    "Misled by deceptive marketing? Gold Law fights for consumers deceived by false advertising and products that don't deliver on their promises.",
+  path: "/false-advertising",
+});
 
 export default function FalseAdvertisingPage() {
   return (

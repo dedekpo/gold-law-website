@@ -17,6 +17,7 @@ const sourceSerif = Source_Serif_4({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://chrisgoldlaw.com"),
   title: {
     default: "Gold Law – Attorneys & Associates",
     template: "%s – Gold Law",
@@ -24,6 +25,26 @@ export const metadata: Metadata = {
   description:
     "Top consumer class action law firm in Miami Beach. Get $500 to $1,500 for each unwanted call or text message you receive — you pay nothing unless we win.",
   icons: { icon: "/images/favicon-192.png" },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    siteName: "Gold Law, P.A.",
+    title: "Gold Law – Attorneys & Associates",
+    description:
+      "Top consumer class action law firm in Miami Beach. Get $500 to $1,500 for each unwanted call or text message you receive — you pay nothing unless we win.",
+    url: "/",
+    images: [
+      {
+        url: "/images/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Gold Law – Consumer Attorneys",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export default function RootLayout({

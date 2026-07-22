@@ -1,9 +1,12 @@
-import type { Metadata } from "next";
 import ArticleLayout from "@/components/ArticleLayout";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Unwanted Calls and Text Messages (TCPA Violations)",
-};
+  description:
+    "Receiving unwanted calls or texts? Under the TCPA you could be entitled to $500 to $1,500 per call or message. Gold Law fights robocall offenders — free case review.",
+  path: "/unwanted-calls-and-text-messages-tcpa-violations",
+});
 
 export default function TcpaViolationsPage() {
   return (

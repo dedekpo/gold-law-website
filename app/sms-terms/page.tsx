@@ -1,10 +1,13 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import ArticleLayout from "@/components/ArticleLayout";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Mobile Terms of Service",
-};
+  description:
+    "Terms for Gold Law's SMS program: message frequency, opt-out instructions (text STOP), help, and privacy protections for your mobile information.",
+  path: "/sms-terms",
+});
 
 export default function SmsTermsPage() {
   return (

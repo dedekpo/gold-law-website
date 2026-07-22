@@ -1,10 +1,13 @@
-import type { Metadata } from "next";
 import ContactSection from "@/components/ContactSection";
 import PageBanner from "@/components/PageBanner";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Contact Us",
-};
+  description:
+    "Contact Gold Law for a FREE case review. Call (305) 900-GOLD or send us a message about unwanted calls or texts, debt collector harassment, false advertising, or data breaches.",
+  path: "/contact-us",
+});
 
 export default function ContactUsPage() {
   return (

@@ -1,9 +1,12 @@
-import type { Metadata } from "next";
 import ArticleLayout from "@/components/ArticleLayout";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Data Breaches",
-};
+  description:
+    "Was your personal information exposed in a data breach? Gold Law helps consumers hold companies accountable for failing to protect their data.",
+  path: "/data-breaches",
+});
 
 export default function DataBreachesPage() {
   return (
