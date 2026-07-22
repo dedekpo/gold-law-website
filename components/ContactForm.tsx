@@ -14,7 +14,7 @@ export default function ContactForm() {
   }
 
   const inputClasses =
-    "w-full h-11 border border-[#d9d9d9] bg-white px-3 text-sm text-black outline-none focus:border-red transition-colors";
+    "w-full h-12 rounded-sm border border-bone-dark bg-white px-4 text-sm text-ink outline-none placeholder:text-muted/70 focus:border-gold transition-colors";
 
   return (
     <form onSubmit={handleSubmit} aria-label="Contact form">
@@ -48,21 +48,21 @@ export default function ContactForm() {
           placeholder="Message:"
           rows={6}
           maxLength={2000}
-          className="sm:col-span-2 w-full border border-[#d9d9d9] bg-white p-3 text-sm text-black outline-none focus:border-red transition-colors"
+          className="sm:col-span-2 w-full rounded-sm border border-bone-dark bg-white p-4 text-sm text-ink outline-none placeholder:text-muted/70 focus:border-gold transition-colors"
         />
       </div>
       <button
         type="submit"
         disabled={status === "submitting"}
-        className="mt-4 cursor-pointer bg-[#333333] px-8 py-3 text-white transition-colors hover:bg-red-hover disabled:opacity-60"
+        className="mt-5 cursor-pointer rounded-sm bg-ink px-8 py-3.5 text-sm font-semibold uppercase tracking-[0.12em] text-gold-pale transition-colors hover:bg-ink-deep disabled:opacity-60"
       >
         {status === "sent" ? "Message Sent!" : "Send Your Message"}
       </button>
-      <p className="mt-4 text-sm text-muted">
+      <p className="mt-5 text-sm text-muted">
         By selecting &quot;YES&quot; to the question above, you agree to receive recurring text
         messages that may be sent by an automated system. Consent is not a condition of purchasing
         goods or services. By clicking Next, you agree to our{" "}
-        <Link href="/privacy-policy" className="text-red hover:underline">
+        <Link href="/privacy-policy" className="text-gold-deep underline hover:no-underline">
           Privacy Policy
         </Link>
         .

@@ -103,7 +103,7 @@ export default function PrivacyPolicyPage() {
         <li>
           <strong>Text Messages:</strong> You may opt out of text messages at any time by replying
           “STOP” to any message you receive from us. See our{" "}
-          <Link href="/sms-terms" className="text-red underline hover:no-underline">
+          <Link href="/sms-terms" className="text-gold-deep underline hover:no-underline">
             Mobile Terms of Service
           </Link>{" "}
           for details.
@@ -183,11 +183,11 @@ export default function PrivacyPolicyPage() {
         350 Lincoln Rd., 2nd Floor, Miami Beach, FL 33139
         <br />
         Email:{" "}
-        <a href="mailto:info@chrisgoldlaw.com" className="text-red underline hover:no-underline">
+        <a href="mailto:info@chrisgoldlaw.com" className="text-gold-deep underline hover:no-underline">
           info@chrisgoldlaw.com
         </a>{" "}
         • Phone:{" "}
-        <a href="tel:+13059004653" className="text-red underline hover:no-underline">
+        <a href="tel:+13059004653" className="text-gold-deep underline hover:no-underline">
           (305) 900-GOLD (4653)
         </a>
       </p>

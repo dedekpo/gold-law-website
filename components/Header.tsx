@@ -8,12 +8,10 @@ import {
   CaretDownIcon,
   EnvelopeIcon,
   FacebookIcon,
-  GoogleIcon,
   InstagramIcon,
   LinkedinIcon,
   MapMarkerIcon,
   PhoneIcon,
-  TwitterIcon,
 } from "./icons";
 
 const practiceAreas = [
@@ -30,11 +28,21 @@ const practiceAreas = [
 ];
 
 const socials = [
-  { label: "Facebook", Icon: FacebookIcon },
-  { label: "Twitter", Icon: TwitterIcon },
-  { label: "Instagram", Icon: InstagramIcon },
-  { label: "Google", Icon: GoogleIcon },
-  { label: "LinkedIn", Icon: LinkedinIcon },
+  {
+    label: "Facebook",
+    href: "https://www.facebook.com/profile.php?id=61560217118796",
+    Icon: FacebookIcon,
+  },
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/gold_standard_law/",
+    Icon: InstagramIcon,
+  },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/company/chrisgoldlaw/",
+    Icon: LinkedinIcon,
+  },
 ];
 
 export default function Header() {
@@ -43,31 +51,37 @@ export default function Header() {
   const [mobilePracticeOpen, setMobilePracticeOpen] = useState(false);
 
   const navLink = (href: string) =>
-    `font-medium text-[15px] uppercase tracking-wide transition-colors hover:text-red ${
-      pathname === href ? "text-red" : "text-navy-deep"
+    `text-[13px] font-medium uppercase tracking-[0.18em] transition-colors hover:text-gold ${
+      pathname === href ? "text-gold" : "text-white/80"
     }`;
 
   return (
-    <header className="relative z-50">
+    <header className="relative z-50 bg-ink-deep">
       {/* Top bar */}
-      <div className="bg-navy text-white text-sm">
+      <div className="border-b border-white/10 text-sm text-white/60">
         <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between gap-4">
           <ul className="flex flex-wrap items-center gap-x-6 gap-y-1">
             <li className="flex items-center gap-2">
-              <EnvelopeIcon className="h-3.5 w-3.5 text-red" />
-              <a href="mailto:info@chrisgoldlaw.com" className="hover:text-red transition-colors">
+              <EnvelopeIcon className="h-3.5 w-3.5 text-gold" />
+              <a href="mailto:info@chrisgoldlaw.com" className="hover:text-gold transition-colors">
                 info@chrisgoldlaw.com
               </a>
             </li>
             <li className="hidden sm:flex items-center gap-2">
-              <MapMarkerIcon className="h-3.5 w-3.5 text-red" />
+              <MapMarkerIcon className="h-3.5 w-3.5 text-gold" />
               <span>350 Lincoln Rd., 2nd Floor Miami Beach, FL 33139</span>
             </li>
           </ul>
           <ul className="hidden md:flex items-center gap-4">
-            {socials.map(({ label, Icon }) => (
+            {socials.map(({ label, href, Icon }) => (
               <li key={label}>
-                <a href="#" aria-label={label} className="hover:text-red transition-colors">
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="hover:text-gold transition-colors"
+                >
                   <Icon className="h-4 w-4" />
                 </a>
               </li>
@@ -77,21 +91,21 @@ export default function Header() {
       </div>
 
       {/* Main header */}
-      <div className="bg-white shadow-sm">
+      <div className="border-b border-gold/25">
         <div className="mx-auto max-w-7xl px-4 flex items-center justify-between gap-6 py-4">
           <Link href="/" className="shrink-0">
             <Image
-              src="/images/logo.png"
+              src="/images/gold-logo.jpg"
               alt="Gold Law – Consumer Attorneys"
-              width={240}
-              height={84}
+              width={448}
+              height={144}
               priority
-              className="h-16 w-auto"
+              className="h-12 w-auto lg:h-14"
             />
           </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden lg:flex items-center gap-8">
+          <nav className="hidden lg:flex items-center gap-9">
             <Link href="/" className={navLink("/")}>
               Home
             </Link>
@@ -106,13 +120,13 @@ export default function Header() {
                 Practice Areas
                 <CaretDownIcon className="h-3 w-3" />
               </Link>
-              <div className="absolute left-0 top-full pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                <ul className="w-80 bg-white shadow-xl border-t-2 border-red py-2">
+              <div className="absolute left-0 top-full pt-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                <ul className="w-80 bg-ink-soft border-t-2 border-gold py-2 shadow-2xl shadow-black/60">
                   {practiceAreas.map((item) => (
                     <li key={item.href}>
                       <Link
                         href={item.href}
-                        className="block px-5 py-2.5 text-sm text-navy-deep hover:text-red transition-colors"
+                        className="block px-5 py-2.5 text-sm text-white/80 hover:text-gold transition-colors"
                       >
                         {item.label}
                       </Link>
@@ -129,12 +143,14 @@ export default function Header() {
           {/* Phone */}
           <a
             href="tel:+13059004653"
-            className="hidden xl:flex items-center gap-3 border-l border-gray-200 pl-6"
+            className="hidden xl:flex items-center gap-3 border-l border-white/10 pl-6"
           >
-            <PhoneIcon className="h-8 w-8 text-red -scale-x-100" />
+            <PhoneIcon className="h-7 w-7 text-gold -scale-x-100" />
             <span>
-              <span className="block text-sm text-muted">Contact us for a FREE case review</span>
-              <span className="block text-xl font-semibold text-navy-deep">
+              <span className="block text-xs uppercase tracking-[0.14em] text-white/50">
+                Free case review
+              </span>
+              <span className="block text-lg font-semibold text-gold-pale">
                 (305) 900-GOLD(4653)
               </span>
             </span>
@@ -146,32 +162,36 @@ export default function Header() {
             aria-label="Toggle menu"
             aria-expanded={mobileOpen}
             onClick={() => setMobileOpen((v) => !v)}
-            className="lg:hidden flex flex-col justify-center gap-1.5 h-11 w-11 items-center rounded border border-gray-200"
+            className="lg:hidden flex flex-col justify-center gap-1.5 h-11 w-11 items-center rounded-sm border border-white/20"
           >
-            <span className="block h-0.5 w-6 bg-navy-deep" />
-            <span className="block h-0.5 w-6 bg-navy-deep" />
-            <span className="block h-0.5 w-6 bg-navy-deep" />
+            <span className="block h-0.5 w-6 bg-gold" />
+            <span className="block h-0.5 w-6 bg-gold" />
+            <span className="block h-0.5 w-6 bg-gold" />
           </button>
         </div>
 
         {/* Mobile nav */}
         {mobileOpen && (
-          <nav className="lg:hidden border-t border-gray-100 bg-white px-4 pb-4">
-            <Link href="/" className="block py-3 text-navy-deep font-medium" onClick={() => setMobileOpen(false)}>
+          <nav className="lg:hidden border-t border-white/10 bg-ink-deep px-4 pb-4">
+            <Link
+              href="/"
+              className="block py-3 text-white/90 font-medium"
+              onClick={() => setMobileOpen(false)}
+            >
               Home
             </Link>
             <Link
               href="/about-us"
-              className="block py-3 text-navy-deep font-medium border-t border-gray-100"
+              className="block py-3 text-white/90 font-medium border-t border-white/10"
               onClick={() => setMobileOpen(false)}
             >
               About Us
             </Link>
-            <div className="border-t border-gray-100">
+            <div className="border-t border-white/10">
               <div className="flex items-center justify-between">
                 <Link
                   href="/practice-area"
-                  className="block py-3 text-navy-deep font-medium"
+                  className="block py-3 text-white/90 font-medium"
                   onClick={() => setMobileOpen(false)}
                 >
                   Practice Areas
@@ -184,7 +204,7 @@ export default function Header() {
                   className="p-3"
                 >
                   <CaretDownIcon
-                    className={`h-3.5 w-3.5 text-navy-deep transition-transform ${mobilePracticeOpen ? "rotate-180" : ""}`}
+                    className={`h-3.5 w-3.5 text-gold transition-transform ${mobilePracticeOpen ? "rotate-180" : ""}`}
                   />
                 </button>
               </div>
@@ -194,7 +214,7 @@ export default function Header() {
                     <li key={item.href}>
                       <Link
                         href={item.href}
-                        className="block py-2 text-sm text-muted"
+                        className="block py-2 text-sm text-white/60"
                         onClick={() => setMobileOpen(false)}
                       >
                         {item.label}
@@ -206,16 +226,16 @@ export default function Header() {
             </div>
             <Link
               href="/contact-us"
-              className="block py-3 text-navy-deep font-medium border-t border-gray-100"
+              className="block py-3 text-white/90 font-medium border-t border-white/10"
               onClick={() => setMobileOpen(false)}
             >
               Contact Us
             </Link>
             <a
               href="tel:+13059004653"
-              className="mt-2 flex items-center gap-3 rounded bg-navy px-4 py-3 text-white"
+              className="mt-2 flex items-center gap-3 rounded-sm border border-gold/40 px-4 py-3 text-gold-pale"
             >
-              <PhoneIcon className="h-5 w-5 text-red -scale-x-100" />
+              <PhoneIcon className="h-5 w-5 text-gold -scale-x-100" />
               (305) 900-GOLD(4653)
             </a>
           </nav>

@@ -18,11 +18,11 @@ export default function NewsletterForm() {
         name="email"
         required
         placeholder="Enter Email *"
-        className="h-12 w-full bg-white px-4 text-sm text-black placeholder:text-[#aaaaaa] outline-none"
+        className="h-12 w-full rounded-l-sm border border-white/15 bg-white/5 px-4 text-sm text-white placeholder:text-white/40 outline-none focus:border-gold/60 transition-colors"
       />
       <button
         type="submit"
-        className="h-12 shrink-0 cursor-pointer bg-red px-6 text-[15px] text-[#fafafa] transition-colors hover:bg-navy"
+        className="h-12 shrink-0 cursor-pointer rounded-r-sm bg-gold px-6 text-sm font-semibold uppercase tracking-[0.1em] text-ink-deep transition-colors hover:bg-gold-pale"
       >
         {status === "sent" ? "Subscribed!" : "Subscribe"}
       </button>

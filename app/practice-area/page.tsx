@@ -24,24 +24,26 @@ export default function PracticeAreaPage() {
         className="relative bg-cover bg-center"
         style={{ backgroundImage: "url(/images/bg-cta.jpg)" }}
       >
-        <div className="absolute inset-0 bg-navy/80" aria-hidden="true" />
+        <div className="absolute inset-0 bg-ink-deep/85" aria-hidden="true" />
         <div className="relative mx-auto max-w-7xl px-4 pt-14 lg:pt-0">
           <div className="grid items-center gap-10 lg:grid-cols-2">
             <div className="pb-14 lg:py-24 order-2 lg:order-1">
-              <h3 className="mb-2 font-serif text-xl font-semibold text-red-button">New Case?</h3>
+              <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.3em] text-gold">
+                New Case?
+              </h3>
               <h2 className="mb-5 font-serif text-4xl lg:text-[46px] font-semibold leading-tight text-white">
                 Contact us for a Free Case Review
               </h2>
-              <p className="mb-10 text-[#cccccc]">
+              <p className="mb-10 text-white/70">
                 Our legal team specializes in Telephone Consumer Protection Act cases and Fair Debt
                 Collection Practices Act cases, and we&rsquo;re here to help you get compensation
                 from harassing telemarketers and debt collectors
               </p>
               <div className="flex items-center gap-4">
-                <UserTieIcon className="h-12 w-12 shrink-0 text-red-button" />
+                <UserTieIcon className="h-12 w-12 shrink-0 text-gold" />
                 <div>
                   <h3 className="font-serif text-xl font-semibold text-white">Expert Attorneys</h3>
-                  <p className="text-white/80">(305) 900-GOLD(4653)</p>
+                  <p className="text-white/70">(305) 900-GOLD(4653)</p>
                 </div>
               </div>
             </div>
@@ -51,7 +53,7 @@ export default function PracticeAreaPage() {
                 alt="Attorney Chris Gold"
                 width={800}
                 height={1200}
-                className="w-full max-w-md rounded object-cover"
+                className="w-full max-w-md rounded-sm object-cover"
               />
             </div>
           </div>
@@ -59,13 +61,15 @@ export default function PracticeAreaPage() {
       </section>
 
       {/* Newsletter */}
-      <section className="bg-crimson">
+      <section className="border-t border-white/10 bg-ink">
         <div className="mx-auto max-w-3xl px-4 py-16 lg:py-20 text-center">
-          <h3 className="mb-2 font-serif text-xl font-semibold text-gold">Newsletter</h3>
+          <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.3em] text-gold">
+            Newsletter
+          </h3>
           <h2 className="mb-5 font-serif text-4xl lg:text-[44px] font-semibold leading-tight text-white">
             Subscribe to Our Newsletter
           </h2>
-          <p className="mb-8 text-[15px] text-white">
+          <p className="mb-8 text-[15px] text-white/70">
             Our lawyers aggressively tackle robocalls and debt collectors, ensuring your rights are
             protected and getting you the compensation you deserve.
           </p>

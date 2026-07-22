@@ -76,12 +76,12 @@ export default function TermsAndConditionsPage() {
       <p>
         If you provide your mobile phone number to Gold Law and opt in to receive text messages,
         that texting program is governed by our separate Mobile Terms of Service, available at{" "}
-        <Link href="/sms-terms" className="text-red underline hover:no-underline">
+        <Link href="/sms-terms" className="text-gold-deep underline hover:no-underline">
           chrisgoldlaw.com/sms-terms/
         </Link>
         , which is incorporated into these Terms by reference. Please review those terms, along
         with our{" "}
-        <Link href="/privacy-policy" className="text-red underline hover:no-underline">
+        <Link href="/privacy-policy" className="text-gold-deep underline hover:no-underline">
           Privacy Policy
         </Link>
         , before opting in.
@@ -141,11 +141,11 @@ export default function TermsAndConditionsPage() {
         350 Lincoln Rd., 2nd Floor, Miami Beach, FL 33139
         <br />
         Email:{" "}
-        <a href="mailto:info@chrisgoldlaw.com" className="text-red underline hover:no-underline">
+        <a href="mailto:info@chrisgoldlaw.com" className="text-gold-deep underline hover:no-underline">
           info@chrisgoldlaw.com
         </a>{" "}
         • Phone:{" "}
-        <a href="tel:+13059004653" className="text-red underline hover:no-underline">
+        <a href="tel:+13059004653" className="text-gold-deep underline hover:no-underline">
           (305) 900-GOLD (4653)
         </a>
       </p>

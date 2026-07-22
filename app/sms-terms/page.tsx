@@ -69,11 +69,11 @@ export default function SmsTermsPage() {
       <p>
         For help with the Gold Law text messaging program, text “HELP” to the number you received
         messages from, or contact us at{" "}
-        <a href="mailto:info@chrisgoldlaw.com" className="text-red underline hover:no-underline">
+        <a href="mailto:info@chrisgoldlaw.com" className="text-gold-deep underline hover:no-underline">
           info@chrisgoldlaw.com
         </a>{" "}
         or{" "}
-        <a href="tel:+13059004653" className="text-red underline hover:no-underline">
+        <a href="tel:+13059004653" className="text-gold-deep underline hover:no-underline">
           (305) 900-GOLD (4653)
         </a>
         .
@@ -97,11 +97,11 @@ export default function SmsTermsPage() {
       <p>
         Enrolling in this SMS program, or exchanging text messages with Gold Law, does not create
         an attorney-client relationship. See our{" "}
-        <Link href="/terms-and-conditions" className="text-red underline hover:no-underline">
+        <Link href="/terms-and-conditions" className="text-gold-deep underline hover:no-underline">
           Website Terms and Conditions
         </Link>{" "}
         and{" "}
-        <Link href="/privacy-policy" className="text-red underline hover:no-underline">
+        <Link href="/privacy-policy" className="text-gold-deep underline hover:no-underline">
           Privacy Policy
         </Link>{" "}
         for more information.
@@ -118,7 +118,7 @@ export default function SmsTermsPage() {
       <h2>Privacy</h2>
       <p>
         Your use of this SMS program is also governed by our Privacy Policy at{" "}
-        <Link href="/privacy-policy" className="text-red underline hover:no-underline">
+        <Link href="/privacy-policy" className="text-gold-deep underline hover:no-underline">
           chrisgoldlaw.com/privacy-policy/
         </Link>
         , which describes how we collect and use your information. No mobile information will be
@@ -150,11 +150,11 @@ export default function SmsTermsPage() {
         350 Lincoln Rd., 2nd Floor, Miami Beach, FL 33139
         <br />
         Email:{" "}
-        <a href="mailto:info@chrisgoldlaw.com" className="text-red underline hover:no-underline">
+        <a href="mailto:info@chrisgoldlaw.com" className="text-gold-deep underline hover:no-underline">
           info@chrisgoldlaw.com
         </a>{" "}
         • Phone:{" "}
-        <a href="tel:+13059004653" className="text-red underline hover:no-underline">
+        <a href="tel:+13059004653" className="text-gold-deep underline hover:no-underline">
           (305) 900-GOLD (4653)
         </a>
       </p>

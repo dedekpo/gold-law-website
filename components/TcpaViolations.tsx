@@ -28,31 +28,27 @@ const violations = [
   },
 ];
 
-export default function TcpaViolations({
-  background = "navy",
-}: {
-  background?: "navy" | "crimson";
-}) {
+export default function TcpaViolations() {
   return (
     <section
-      className={
-        background === "navy" ? "bg-navy-darkest bg-cover bg-center" : "bg-crimson"
-      }
-      style={background === "navy" ? { backgroundImage: "url(/images/bg-dark.jpg)" } : undefined}
+      className="bg-ink bg-cover bg-center"
+      style={{ backgroundImage: "url(/images/bg-dark.jpg)" }}
     >
       <div className="mx-auto grid max-w-7xl lg:grid-cols-2">
-        <div className="bg-white px-6 py-14 lg:px-14 lg:pt-20 lg:pb-10">
-          <h2 className="mb-8 font-serif text-4xl lg:text-[42px] font-semibold leading-tight text-navy-deep">
+        <div className="bg-bone px-6 py-14 lg:px-14 lg:pt-20 lg:pb-10">
+          <h2 className="mb-8 font-serif text-4xl lg:text-[42px] font-semibold leading-tight text-ink">
             What is Considered a TCPA Violation?
           </h2>
           <div>
             {violations.map((item) => (
               <div
                 key={item.number}
-                className="border-b border-black/10 py-6 first:pt-0 last:border-b-0"
+                className="border-b border-ink/10 py-6 first:pt-0 last:border-b-0"
               >
-                <div className="mb-2 font-serif text-3xl font-bold text-red">{item.number}</div>
-                <h3 className="mb-2 font-serif text-[22px] font-semibold leading-snug text-navy-deep">
+                <div className="mb-2 font-serif text-3xl font-bold text-gold-deep">
+                  {item.number}
+                </div>
+                <h3 className="mb-2 font-serif text-[22px] font-semibold leading-snug text-ink">
                   {item.title}
                 </h3>
                 <p className="text-sm leading-relaxed">{item.description}</p>
@@ -60,7 +56,7 @@ export default function TcpaViolations({
             ))}
           </div>
         </div>
-        <div className="bg-white">
+        <div className="bg-ink-deep">
           <Image
             src="/images/chris-gold-office.jpg"
             alt="Attorney Chris Gold at his office"

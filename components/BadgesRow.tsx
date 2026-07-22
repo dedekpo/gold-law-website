@@ -9,12 +9,8 @@ const badges = [
 
 export default function BadgesRow() {
   return (
-    <section
-      className="relative bg-cover bg-center"
-      style={{ backgroundImage: "url(/images/bg-badges.jpg)" }}
-    >
-      <div className="absolute inset-0 bg-crimson/[0.72]" aria-hidden="true" />
-      <div className="relative mx-auto max-w-7xl px-4 py-14">
+    <section className="bg-ink-deep">
+      <div className="mx-auto max-w-7xl px-4 py-14">
         <div className="grid grid-cols-2 items-center justify-items-center gap-8 md:grid-cols-4">
           {badges.map((badge) => (
             <Image
@@ -23,7 +19,7 @@ export default function BadgesRow() {
               alt={badge.alt}
               width={200}
               height={200}
-              className="h-28 w-auto object-contain md:h-32"
+              className="h-28 w-auto object-contain opacity-90 transition-opacity hover:opacity-100 md:h-32"
             />
           ))}
         </div>

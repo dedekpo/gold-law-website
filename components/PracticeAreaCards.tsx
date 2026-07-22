@@ -35,25 +35,25 @@ const cards = [
 
 function PracticeCard({ card }: { card: (typeof cards)[number] }) {
   return (
-    <article className="flex h-full flex-col rounded border-[3px] border-red/20 bg-navy p-8 pb-10">
+    <article className="group flex h-full flex-col rounded-sm border border-white/10 bg-ink-soft p-8 pb-10 transition-colors duration-300 hover:border-gold/50">
       <Image
         src={card.image}
         alt={card.title}
         width={640}
         height={420}
-        className="mb-5 w-full rounded object-cover aspect-[3/2]"
+        className="mb-6 w-full rounded-sm object-cover aspect-[3/2]"
       />
-      <h3 className="mb-3 text-center font-serif text-[22px] font-semibold leading-snug text-gold">
+      <h3 className="mb-3 text-center font-serif text-[22px] font-semibold leading-snug text-gold-pale">
         {card.title}
       </h3>
-      <p className="mb-6 text-center text-sm leading-relaxed text-white/80">{card.description}</p>
+      <p className="mb-7 text-center text-sm leading-relaxed text-white/70">{card.description}</p>
       <div className="mt-auto text-center">
         <Link
           href={card.href}
-          className="inline-flex items-center gap-2 rounded bg-red px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-red-hover"
+          className="inline-flex items-center gap-2 rounded-sm border border-gold/60 px-5 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-gold transition-colors hover:bg-gold hover:text-ink-deep"
         >
-          <ArrowRightIcon className="h-3.5 w-3.5" />
           Read More
+          <ArrowRightIcon className="h-3 w-3" />
         </Link>
       </div>
     </article>
@@ -66,12 +66,12 @@ export default function PracticeAreaCards() {
       className="relative bg-cover bg-center"
       style={{ backgroundImage: "url(/images/bg-practice.jpg)" }}
     >
-      <div className="absolute inset-0 bg-crimson/[0.77]" aria-hidden="true" />
+      <div className="absolute inset-0 bg-ink/[0.94]" aria-hidden="true" />
       <div className="relative mx-auto max-w-7xl px-4 py-20 lg:py-24">
-        <h3 className="mb-2 text-center font-serif text-xl font-semibold text-gold">
+        <h3 className="mb-4 text-center text-xs font-semibold uppercase tracking-[0.3em] text-gold">
           Areas of Practice
         </h3>
-        <h2 className="mx-auto mb-12 max-w-4xl text-center font-serif text-4xl lg:text-[44px] font-semibold leading-tight text-white">
+        <h2 className="mx-auto mb-14 max-w-4xl text-center font-serif text-4xl lg:text-[44px] font-semibold leading-tight text-white">
           We Are Here To Fight Against Harassing Telemarketers and Debt Collectors
         </h2>
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">

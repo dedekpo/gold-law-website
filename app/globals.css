@@ -1,16 +1,18 @@
 @import "tailwindcss";
 
 @theme {
-  /* Brand palette ported from the WordPress (Elementor) theme */
-  --color-navy: #181a32;
-  --color-navy-deep: #161940;
-  --color-navy-darkest: #040d2f;
-  --color-red: #ea5353;
-  --color-red-button: #eb5353;
-  --color-red-hover: #b53636;
-  --color-crimson: #f20845;
-  --color-gold: #ffc000;
-  --color-muted: #565872;
+  /* Black & gold brand palette, anchored to the gold-logo.jpg artwork.
+     The logo sits on pure black, so ink-deep is #000 to blend with it. */
+  --color-ink-deep: #000000;
+  --color-ink: #16130e;
+  --color-ink-soft: #211d16;
+  --color-gold: #c3a25d;
+  --color-gold-deep: #96773a;
+  --color-gold-pale: #e7d19a;
+  --color-bone: #f4f1ea;
+  --color-bone-dark: #e4ddd0;
+  --color-paper: #faf8f4;
+  --color-muted: #6d675c;
 
   --font-sans: var(--font-poppins), sans-serif;
   --font-serif: var(--font-source-serif), serif;
@@ -19,7 +21,7 @@
 body {
   font-family: var(--font-sans);
   color: var(--color-muted);
-  background: #ffffff;
+  background: var(--color-paper);
 }
 
 h1,
@@ -30,4 +32,9 @@ h5,
 h6 {
   font-family: var(--font-serif);
   font-weight: 600;
+}
+
+::selection {
+  background: var(--color-gold);
+  color: var(--color-ink-deep);
 }
