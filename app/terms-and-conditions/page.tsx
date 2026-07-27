@@ -22,7 +22,7 @@ export default function TermsAndConditionsPage() {
       showCta={false}
     >
       <h2>Gold Law, P.A. Website Terms and Conditions</h2>
-      <p>Effective Date: July 19, 2026</p>
+      <p>Effective Date: July 27, 2026</p>
       <p>
         Welcome to chrisgoldlaw.com (the “Site”), owned and operated by Gold Law, P.A. (“Gold
         Law,” “we,” “us,” or “our”). These Terms and Conditions (“Terms”) govern your access to
@@ -160,25 +160,24 @@ export default function TermsAndConditionsPage() {
       <hr className="mt-14 border-t border-ink/15" />
 
       <h2>Appendix — Gold Law, P.A. Mobile Terms of Service (SMS Program)</h2>
-      <p>Effective Date: July 19, 2026</p>
+      <p>Effective Date: July 27, 2026</p>
       <p>Program Name: Gold Law, P.A.</p>
 
       <h3 className={subHeading}>Program Description</h3>
       <p>
-        By providing your mobile phone number to Gold Law, P.A. — through our website
-        contact/intake form, a GoHighLevel-hosted landing page or funnel, or a Meta
-        (Facebook/Instagram) lead ad form — and by checking the applicable consent box or
-        otherwise opting in, you agree to receive text messages (SMS/MMS) from Gold Law, P.A.
-        related to: (a) following up on your inquiry about a potential legal matter; (b)
-        scheduling, confirming, or rescheduling a consultation or appointment; and (c) providing
-        case and client status updates if you become a client. Message types may include
-        appointment reminders, requests for documents or information, scheduling coordination,
-        and status updates on your matter.
+        By providing your mobile phone number to Gold Law, P.A. — through the contact form on our
+        website at chrisgoldlaw.com/contact-us or through a Meta (Facebook/Instagram) lead ad form
+        — and by checking the SMS consent box, you agree to receive text messages (SMS/MMS) from
+        Gold Law, P.A. related to: (a) following up on your inquiry about a potential legal matter;
+        (b) scheduling, confirming, or rescheduling a consultation or appointment; and (c)
+        providing case and client status updates if you become a client. Message types may include
+        appointment reminders, requests for documents or information, scheduling coordination, and
+        status updates on your matter.
       </p>
       <p>
         We do not use this program to send unsolicited marketing or promotional text messages to
-        individuals who have not first contacted us or provided their mobile number through one
-        of the channels described above.
+        individuals who have not first contacted us or provided their mobile number through one of
+        the channels described above.
       </p>
 
       <h3 className={subHeading}>Message Frequency</h3>

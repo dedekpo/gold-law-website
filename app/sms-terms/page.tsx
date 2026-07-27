@@ -17,25 +17,24 @@ export default function SmsTermsPage() {
       showCta={false}
     >
       <h2>Gold Law, P.A. Mobile Terms of Service — SMS Program</h2>
-      <p>Effective Date: July 19, 2026</p>
+      <p>Effective Date: July 27, 2026</p>
       <p>Program Name: Gold Law, P.A.</p>
 
       <h2>Program Description</h2>
       <p>
-        By providing your mobile phone number to Gold Law, P.A. — through our website
-        contact/intake form, a GoHighLevel-hosted landing page or funnel, or a Meta
-        (Facebook/Instagram) lead ad form — and by checking the applicable consent box or
-        otherwise opting in, you agree to receive text messages (SMS/MMS) from Gold Law, P.A.
-        related to: (a) following up on your inquiry about a potential legal matter; (b)
-        scheduling, confirming, or rescheduling a consultation or appointment; and (c) providing
-        case and client status updates if you become a client. Message types may include
-        appointment reminders, requests for documents or information, scheduling coordination,
-        and status updates on your matter.
+        By providing your mobile phone number to Gold Law, P.A. — through the contact form on our
+        website at chrisgoldlaw.com/contact-us or through a Meta (Facebook/Instagram) lead ad form
+        — and by checking the SMS consent box, you agree to receive text messages (SMS/MMS) from
+        Gold Law, P.A. related to: (a) following up on your inquiry about a potential legal matter;
+        (b) scheduling, confirming, or rescheduling a consultation or appointment; and (c)
+        providing case and client status updates if you become a client. Message types may include
+        appointment reminders, requests for documents or information, scheduling coordination, and
+        status updates on your matter.
       </p>
       <p>
         We do not use this program to send unsolicited marketing or promotional text messages to
-        individuals who have not first contacted us or provided their mobile number through one
-        of the channels described above.
+        individuals who have not first contacted us or provided their mobile number through one of
+        the channels described above.
       </p>
 
       <h2>Message Frequency</h2>
