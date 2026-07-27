@@ -5,9 +5,14 @@ import { pageMetadata } from "@/lib/seo";
 export const metadata = pageMetadata({
   title: "Terms and Conditions",
   description:
-    "The terms governing your use of chrisgoldlaw.com, including attorney advertising disclosures and our text messaging program.",
+    "The terms governing your use of chrisgoldlaw.com, including attorney advertising disclosures and the full Mobile Terms of Service for our text messaging program.",
   path: "/terms-and-conditions",
 });
+
+/* Sub-heading style for the appended SMS terms — one level below the numbered
+   section headings that ArticleLayout styles. */
+const subHeading =
+  "mb-3 mt-8 font-serif text-2xl font-semibold leading-tight text-ink";
 
 export default function TermsAndConditionsPage() {
   return (
@@ -75,12 +80,14 @@ export default function TermsAndConditionsPage() {
       <h2>6. Text Messaging (SMS) Program</h2>
       <p>
         If you provide your mobile phone number to Gold Law and opt in to receive text messages,
-        that texting program is governed by our separate Mobile Terms of Service, available at{" "}
+        that texting program is governed by our Mobile Terms of Service, which are reproduced in
+        full in the Appendix at the end of these Terms and are also available as a standalone page
+        at{" "}
         <Link href="/sms-terms" className="text-gold-deep underline hover:no-underline">
           chrisgoldlaw.com/sms-terms/
         </Link>
-        , which is incorporated into these Terms by reference. Please review those terms, along
-        with our{" "}
+        . Those Mobile Terms of Service are incorporated into these Terms by reference. Please
+        review them, along with our{" "}
         <Link href="/privacy-policy" className="text-gold-deep underline hover:no-underline">
           Privacy Policy
         </Link>
@@ -135,6 +142,147 @@ export default function TermsAndConditionsPage() {
 
       <h2>13. Contact Us</h2>
       <p>Questions about these Terms may be directed to:</p>
+      <p>
+        Gold Law, P.A.
+        <br />
+        350 Lincoln Rd., 2nd Floor, Miami Beach, FL 33139
+        <br />
+        Email:{" "}
+        <a href="mailto:info@chrisgoldlaw.com" className="text-gold-deep underline hover:no-underline">
+          info@chrisgoldlaw.com
+        </a>{" "}
+        • Phone:{" "}
+        <a href="tel:+13059004653" className="text-gold-deep underline hover:no-underline">
+          (305) 900-GOLD (4653)
+        </a>
+      </p>
+
+      <hr className="mt-14 border-t border-ink/15" />
+
+      <h2>Appendix — Gold Law, P.A. Mobile Terms of Service (SMS Program)</h2>
+      <p>Effective Date: July 19, 2026</p>
+      <p>Program Name: Gold Law, P.A.</p>
+
+      <h3 className={subHeading}>Program Description</h3>
+      <p>
+        By providing your mobile phone number to Gold Law, P.A. — through our website
+        contact/intake form, a GoHighLevel-hosted landing page or funnel, or a Meta
+        (Facebook/Instagram) lead ad form — and by checking the applicable consent box or
+        otherwise opting in, you agree to receive text messages (SMS/MMS) from Gold Law, P.A.
+        related to: (a) following up on your inquiry about a potential legal matter; (b)
+        scheduling, confirming, or rescheduling a consultation or appointment; and (c) providing
+        case and client status updates if you become a client. Message types may include
+        appointment reminders, requests for documents or information, scheduling coordination,
+        and status updates on your matter.
+      </p>
+      <p>
+        We do not use this program to send unsolicited marketing or promotional text messages to
+        individuals who have not first contacted us or provided their mobile number through one
+        of the channels described above.
+      </p>
+
+      <h3 className={subHeading}>Message Frequency</h3>
+      <p>
+        Message frequency varies depending on the status of your inquiry or case. You may receive
+        more messages during active scheduling or case activity and fewer messages at other
+        times.
+      </p>
+
+      <h3 className={subHeading}>Cost</h3>
+      <p>
+        Message and data rates may apply. Charges are set by your wireless carrier, not by Gold
+        Law. Contact your carrier for details about your text and data plan.
+      </p>
+
+      <h3 className={subHeading}>Opt-Out / Cancellation</h3>
+      <p>
+        You can cancel this SMS program at any time. Text “STOP” to the number you received
+        messages from. After you send “STOP,” we will send one final confirmation message and you
+        will not receive further texts from us unless you opt back in. If you experience issues
+        with the program, text “HELP” or contact us directly using the information below.
+      </p>
+
+      <h3 className={subHeading}>Rejoining</h3>
+      <p>
+        To resume receiving messages after opting out, submit a new request through our website
+        contact form, reply “START,” or contact our office directly and ask to be re-added.
+      </p>
+
+      <h3 className={subHeading}>Help</h3>
+      <p>
+        For help with the Gold Law text messaging program, text “HELP” to the number you received
+        messages from, or contact us at{" "}
+        <a href="mailto:info@chrisgoldlaw.com" className="text-gold-deep underline hover:no-underline">
+          info@chrisgoldlaw.com
+        </a>{" "}
+        or{" "}
+        <a href="tel:+13059004653" className="text-gold-deep underline hover:no-underline">
+          (305) 900-GOLD (4653)
+        </a>
+        .
+      </p>
+
+      <h3 className={subHeading}>Carrier Disclaimer</h3>
+      <p>
+        Carriers are not liable for delayed or undelivered messages. Participating carriers
+        include, but are not limited to, AT&amp;T, T-Mobile, Verizon, and other major U.S.
+        wireless carriers.
+      </p>
+
+      <h3 className={subHeading}>Eligibility</h3>
+      <p>
+        This program is available only to individuals 18 years of age or older who are the
+        account holder or an authorized user of the mobile number provided, and who reside in the
+        United States.
+      </p>
+
+      <h3 className={subHeading}>No Attorney-Client Relationship Formed by Text</h3>
+      <p>
+        Enrolling in this SMS program, or exchanging text messages with Gold Law, does not create
+        an attorney-client relationship. See the Website Terms and Conditions above and our{" "}
+        <Link href="/privacy-policy" className="text-gold-deep underline hover:no-underline">
+          Privacy Policy
+        </Link>{" "}
+        for more information.
+      </p>
+
+      <h3 className={subHeading}>Confidentiality Warning</h3>
+      <p>
+        Standard SMS text messaging is not an encrypted or fully secure communication method.
+        Please do not send sensitive, confidential, or privileged information by text. If you
+        have questions about how to safely share information about your matter, call our office
+        directly.
+      </p>
+
+      <h3 className={subHeading}>Privacy</h3>
+      <p>
+        Your use of this SMS program is also governed by our Privacy Policy at{" "}
+        <Link href="/privacy-policy" className="text-gold-deep underline hover:no-underline">
+          chrisgoldlaw.com/privacy-policy/
+        </Link>
+        , which describes how we collect and use your information. No mobile information will be
+        shared with third parties or affiliates for marketing or promotional purposes. All the
+        categories of information described in our Privacy Policy exclude text messaging
+        originator opt-in data and consent; this information will not be shared with any third
+        parties, except with our aggregators and mobile messaging service providers as necessary
+        to deliver the SMS program itself.
+      </p>
+
+      <h3 className={subHeading}>Compliance</h3>
+      <p>
+        This program operates in compliance with the Telephone Consumer Protection Act (TCPA),
+        the CTIA Messaging Principles and Best Practices, and applicable carrier requirements.
+        Consent to receive text messages is never required as a condition of retaining Gold Law
+        as your attorney or purchasing any service.
+      </p>
+
+      <h3 className={subHeading}>Changes</h3>
+      <p>
+        We may update these Mobile Terms of Service from time to time. The “Effective Date” above
+        reflects the date of the most recent revision.
+      </p>
+
+      <h3 className={subHeading}>Contact</h3>
       <p>
         Gold Law, P.A.
         <br />
