@@ -67,23 +67,7 @@ export default function ContactForm() {
             updates, appointment reminders, and requests for information about my legal matter.
             Messages may be sent using an automated system. Message frequency varies. Message &amp;
             data rates may apply. Consent is not a condition of purchase or of legal representation.
-            Reply STOP to opt out at any time, or reply HELP for help. See our{" "}
-            <Link
-              href="/privacy-policy"
-              onClick={(event) => event.stopPropagation()}
-              className="text-gold-deep underline hover:no-underline"
-            >
-              Privacy Policy
-            </Link>{" "}
-            and{" "}
-            <Link
-              href="/terms-and-conditions"
-              onClick={(event) => event.stopPropagation()}
-              className="text-gold-deep underline hover:no-underline"
-            >
-              Terms &amp; Conditions
-            </Link>
-            .
+            Reply STOP to opt out at any time, or reply HELP for help.
           </label>
         </div>
         <p className="mt-3 text-xs italic text-muted/80">
@@ -92,10 +76,27 @@ export default function ContactForm() {
         </p>
       </div>
 
+      {/* A2P compliance: the policy links must be a standalone statement next to
+          the submit button, separate from the consent checkbox. */}
+      <p className="mt-5 text-sm leading-relaxed text-muted">
+        See our{" "}
+        <Link href="/privacy-policy" className="text-gold-deep underline hover:no-underline">
+          Privacy Policy
+        </Link>{" "}
+        and{" "}
+        <Link
+          href="/terms-and-conditions"
+          className="text-gold-deep underline hover:no-underline"
+        >
+          Terms &amp; Conditions
+        </Link>{" "}
+        for details on how we handle your information and our SMS program.
+      </p>
+
       <button
         type="submit"
         disabled={pending}
-        className="mt-5 cursor-pointer rounded-sm bg-ink px-8 py-3.5 text-sm font-semibold uppercase tracking-[0.12em] text-gold-pale transition-colors hover:bg-ink-deep disabled:opacity-60"
+        className="mt-4 cursor-pointer rounded-sm bg-ink px-8 py-3.5 text-sm font-semibold uppercase tracking-[0.12em] text-gold-pale transition-colors hover:bg-ink-deep disabled:opacity-60"
       >
         {state.status === "sent" ? "Message Sent!" : "Send Your Message"}
       </button>
