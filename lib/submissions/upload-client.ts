@@ -5,6 +5,7 @@ import type {
   DetectedCapture,
   SignRequest,
   SignResponse,
+  SourceRecording,
 } from "./shared";
 
 /**
@@ -182,7 +183,8 @@ export type UploadArgs = {
   contentType: string;
   lastModified: number | null;
   capture: DetectedCapture;
-  derivedFrom?: string | null;
+  /** Frames / audio only: the recording they were taken from (never uploaded itself). */
+  sourceRecording?: SourceRecording | null;
   clip?: { startSeconds: number; endSeconds: number } | null;
   frameAtSeconds?: number | null;
   /** A pending record from an earlier attempt to reuse instead of minting a new one. */
@@ -202,7 +204,7 @@ export async function uploadSubmissionFile(args: UploadArgs): Promise<{ fileId: 
     contentType: args.contentType,
     lastModified: args.lastModified,
     capture: args.capture,
-    derivedFrom: args.derivedFrom ?? null,
+    sourceRecording: args.sourceRecording ?? null,
     clip: args.clip ?? null,
     frameAtSeconds: args.frameAtSeconds ?? null,
   };

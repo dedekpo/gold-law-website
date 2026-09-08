@@ -11,6 +11,15 @@
  * re-encoding, no stripping — so any embedded metadata (EXIF, XMP, QuickTime
  * creation dates) survives. Filesystem-level timestamps do not travel inside
  * the bytes, so the browser's File.lastModified is recorded on the document.
+ *
+ * Screen recordings (videos) are NEVER uploaded. The browser extracts what the
+ * investigation needs — the frames the client captures (PNG) and the audio
+ * track (MP3) — and only those are sent, each carrying a `sourceRecording`
+ * description of the recording they came from. (Docs written before
+ * 2026-09-08 may still hold `kind: "video"` originals and `derivedFrom` ids.)
+ *
+ * A submission link is only honoured for a contact GHL knows: the page and
+ * the sign endpoint both verify the id against GHL (see lib/ghl.ts).
  */
 
 /** GHL contact ids are 20 alphanumerics; only the character set and an upper bound are enforced. */
@@ -199,8 +208,13 @@ export type SubmissionFileDoc = {
   clientLastModified: string | null;
   capture: DetectedCapture;
   confirmation: CaptureConfirmation | null;
-  /** For files derived from a recording (its audio track, a captured frame): the source file id. */
+  /**
+   * Legacy (before recordings stopped being uploaded): the source recording's
+   * file id. Always null on new documents — see `sourceRecording`.
+   */
   derivedFrom: string | null;
+  /** For frames / audio taken from a recording: the recording itself, which stays on the client's device. */
+  sourceRecording: SourceRecording | null;
   /** Audio derived from a recording: the range it covers; null = the whole track. */
   clip: { startSeconds: number; endSeconds: number } | null;
   /** A frame captured from a recording: the playback position it was taken at. */
@@ -222,6 +236,22 @@ export type SubmissionContactDoc = {
   totalBytes: number;
   firstUploadAt: string;
   lastUploadAt: string;
+  /** ISO — when GHL last confirmed this contact exists (see lib/ghl.ts). */
+  ghlVerifiedAt?: string;
+};
+
+/**
+ * What the record keeps of a screen recording whose frames / audio were
+ * submitted: enough to say which recording they came from and when it was
+ * made, without the recording itself.
+ */
+export type SourceRecording = {
+  name: string;
+  contentType: string;
+  size: number;
+  /** The recording's File.lastModified, ISO. */
+  clientLastModified: string | null;
+  capture: DetectedCapture;
 };
 
 // ---------------------------------------------------------------------------
@@ -234,7 +264,8 @@ export type SignRequest = {
   contentType: string;
   lastModified: number | null;
   capture: DetectedCapture;
-  derivedFrom?: string | null;
+  /** Frames / audio only: the recording they were taken from. */
+  sourceRecording?: SourceRecording | null;
   clip?: { startSeconds: number; endSeconds: number } | null;
   frameAtSeconds?: number | null;
   /** Re-issue a URL for an existing pending file (expired signature, retry). */

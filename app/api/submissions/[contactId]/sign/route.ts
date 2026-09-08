@@ -18,8 +18,10 @@ import {
   type CaptureSource,
   type DetectedCapture,
   type SignResponse,
+  type SourceRecording,
   type SubmissionFileDoc,
 } from "@/lib/submissions/shared";
+import { verifyContact } from "@/lib/ghl";
 import {
   consumeDistinctLimit,
   consumeRateLimit,
@@ -76,6 +78,23 @@ function parseCapture(raw: unknown): DetectedCapture {
   };
 }
 
+/**
+ * The recording a frame / audio track was taken from, as the browser describes
+ * it. `undefined` = malformed (reject); `null` = not a derived file.
+ */
+function parseSourceRecording(raw: unknown): SourceRecording | null | undefined {
+  if (raw == null) return null;
+  if (typeof raw !== "object") return undefined;
+  const r = raw as Record<string, unknown>;
+  const name = typeof r.name === "string" ? r.name.trim().slice(0, LIMITS.maxNameLength) : "";
+  const size = typeof r.size === "number" && Number.isFinite(r.size) && r.size >= 0 ? Math.floor(r.size) : NaN;
+  if (!name || !Number.isFinite(size)) return undefined;
+  const contentType =
+    typeof r.contentType === "string" ? resolveContentType(r.contentType, name) : "";
+  const clientLastModified = isIsoDateTime(r.clientLastModified) ? r.clientLastModified : null;
+  return { name, contentType, size, clientLastModified, capture: parseCapture(r.capture) };
+}
+
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ contactId: string }> },
@@ -99,11 +118,11 @@ export async function POST(
       ? body.lastModified
       : null;
   const capture = parseCapture(body.capture);
-  const derivedFrom = body.derivedFrom == null ? null : body.derivedFrom;
-  const resignFileId = body.resignFileId == null ? null : body.resignFileId;
-  if (derivedFrom !== null && !isUuid(derivedFrom)) {
-    return jsonError(400, "Invalid source file id.", "bad_parent");
+  const sourceRecording = parseSourceRecording(body.sourceRecording);
+  if (sourceRecording === undefined) {
+    return jsonError(400, "The source recording details are not valid.", "bad_parent");
   }
+  const resignFileId = body.resignFileId == null ? null : body.resignFileId;
   if (resignFileId !== null && !isUuid(resignFileId)) {
     return jsonError(409, "That upload can no longer be resumed.", "resign_invalid");
   }
@@ -149,7 +168,16 @@ export async function POST(
   if (!kind) {
     return jsonError(
       415,
-      "Only screenshots (images), screen recordings (videos), and audio recordings can be submitted.",
+      "Only screenshots (images) and audio recordings can be submitted. Screen recordings are handled on the page: capture the moment and the audio is extracted for you.",
+      "unsupported_type",
+    );
+  }
+  // Recordings never leave the device — the portal submits the frames the
+  // client captures and the extracted audio track instead (see shared.ts).
+  if (kind === "video") {
+    return jsonError(
+      415,
+      "Screen recordings are not uploaded. Capture the moment on the page and the recording's audio will be sent with it.",
       "unsupported_type",
     );
   }
@@ -189,6 +217,21 @@ export async function POST(
       );
     }
 
+    // Only a contact GHL knows may fill the bucket. Behind the rate limits so
+    // an id-guessing bot cannot turn this into GHL traffic.
+    const contact = await verifyContact(contactId);
+    if (contact === "missing") {
+      return jsonError(404, "This submission link is not valid.", "bad_contact");
+    }
+    if (contact === "unknown") {
+      return jsonError(
+        503,
+        "We could not verify this submission link right now. Please try again in a moment.",
+        "contact_unverified",
+        { "Retry-After": "30" },
+      );
+    }
+
     // Retry path: same pending record, fresh signature. The record's shape is
     // authoritative — the client cannot change size or type on a re-sign.
     if (resignFileId) {
@@ -220,11 +263,6 @@ export async function POST(
       );
     }
 
-    if (derivedFrom) {
-      const parent = await getFile(contactId, derivedFrom);
-      if (!parent) return jsonError(400, "The source recording was not found.", "bad_parent");
-    }
-
     const fileId = newFileId();
     const doc: SubmissionFileDoc = {
       id: fileId,
@@ -240,7 +278,8 @@ export async function POST(
       clientLastModified: lastModified ? new Date(lastModified).toISOString() : null,
       capture,
       confirmation: null,
-      derivedFrom,
+      derivedFrom: null,
+      sourceRecording,
       clip,
       frameAtSeconds,
       verified: null,

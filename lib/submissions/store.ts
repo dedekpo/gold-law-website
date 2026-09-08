@@ -33,6 +33,21 @@ export async function contactSummary(
   return snap.exists ? (snap.data() as SubmissionContactDoc) : null;
 }
 
+/** When GHL last confirmed the contact exists, if ever (see lib/ghl.ts). */
+export async function contactVerifiedAt(contactId: string): Promise<string | null> {
+  const snap = await db().collection(CONTACTS).doc(contactId).get();
+  const value = snap.exists ? (snap.data() as Partial<SubmissionContactDoc>).ghlVerifiedAt : null;
+  return typeof value === "string" ? value : null;
+}
+
+/** Remember a GHL confirmation; the counters are left to markUploaded. */
+export async function markContactVerified(contactId: string): Promise<void> {
+  await db()
+    .collection(CONTACTS)
+    .doc(contactId)
+    .set({ contactId, ghlVerifiedAt: new Date().toISOString() }, { merge: true });
+}
+
 export async function createPendingFile(doc: SubmissionFileDoc): Promise<void> {
   await db().collection(FILES).doc(doc.id).create(doc);
 }

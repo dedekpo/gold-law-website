@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import PageBanner from "@/components/PageBanner";
 import SubmissionPortal from "@/components/submissions/SubmissionPortal";
 import { ClockIcon, PhoneIcon, ShieldIcon } from "@/components/submissions/icons";
+import { verifyContact } from "@/lib/ghl";
 import { CONTACT_ID_RE, LIMITS } from "@/lib/submissions/shared";
 import { contactSummary } from "@/lib/submissions/store";
 
@@ -25,7 +26,8 @@ const tips = [
   "Upload the original files from your device. Screenshots forwarded through messaging apps are often re-compressed and lose their date information.",
   "Each file is stored exactly as it exists on your device, so the details embedded in it are preserved.",
   "You will be asked to confirm the date each screenshot or recording was taken.",
-  `You may send up to ${LIMITS.maxFilesPerContact} files. Long screen recordings are supported.`,
+  "Screen recordings stay on your device: you capture the moments that show the violation as images, and the recording's audio is extracted and sent with them.",
+  `You may send up to ${LIMITS.maxFilesPerContact} files.`,
 ];
 
 export default async function SubmissionsPage({
@@ -35,6 +37,47 @@ export default async function SubmissionsPage({
 }) {
   const { contactId } = await params;
   if (!CONTACT_ID_RE.test(contactId)) notFound();
+
+  // The link is only honoured for a contact GHL knows; the sign endpoint
+  // enforces the same rule, this just keeps a dead link from looking alive.
+  const contact = await verifyContact(contactId);
+  if (contact !== "ok") {
+    return (
+      <>
+        <PageBanner title="Evidence Submission" subtitle="Secure client upload portal" />
+        <section className="bg-bone">
+          <div className="mx-auto max-w-3xl px-4 py-16 lg:py-24">
+            <div className="rounded-sm border border-bone-dark bg-white p-8">
+              <h2 className="font-serif text-2xl font-semibold text-ink">
+                {contact === "missing"
+                  ? "This submission link is not valid."
+                  : "This page is temporarily unavailable."}
+              </h2>
+              <p className="mt-3 text-base leading-relaxed text-muted">
+                {contact === "missing"
+                  ? "The link you followed does not match a client on file with our office. Please open the exact link you received from us, or contact us and we will send you a new one."
+                  : "We could not verify your link just now. Please try again in a few minutes."}
+              </p>
+              <p className="mt-6 text-sm leading-relaxed text-muted">
+                Call us at{" "}
+                <a href="tel:+13059004653" className="font-medium text-ink hover:text-gold-deep">
+                  (305) 900-GOLD (4653)
+                </a>{" "}
+                or email{" "}
+                <a
+                  href="mailto:info@chrisgoldlaw.com"
+                  className="font-medium text-ink hover:text-gold-deep"
+                >
+                  info@chrisgoldlaw.com
+                </a>
+                .
+              </p>
+            </div>
+          </div>
+        </section>
+      </>
+    );
+  }
 
   let previouslyReceived: number | null = null;
   try {

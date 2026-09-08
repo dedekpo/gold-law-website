@@ -76,6 +76,13 @@ function UploadBadge({ item, onRetry }: { item: QueueItem; onRetry: () => void }
       </span>
     );
   }
+  if (upload.status === "local") {
+    return (
+      <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.12em] text-muted">
+        <VideoIcon className="h-4 w-4" /> Stays on your device
+      </span>
+    );
+  }
   return (
     <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.12em] text-muted">
       <ClockIcon className="h-4 w-4" /> {item.parentLocalId ? "Waiting for the recording" : "Waiting"}
@@ -151,6 +158,8 @@ export default function FileList({ items, onRetry }: FileListProps) {
                     : KIND_LABEL[item.kind]}{" "}
                   ·{" "}
                   {fmtSize(item.size)}
+                  {item.upload.status === "local" &&
+                    " · the moments you capture and its audio are sent instead"}
                 </p>
               </div>
               <UploadBadge item={item} onRetry={() => onRetry(item.localId)} />

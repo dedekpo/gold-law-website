@@ -23,18 +23,20 @@ type Props = {
 // decodeAudioData needs the whole file in memory plus the decoded PCM, and
 // memory cost tracks DURATION, not size. We gate on the duration the preview
 // player reports; when the player cannot read the file (HEVC on Chrome, say)
-// a conservative size gate stands in. The original is uploaded regardless.
+// a conservative size gate stands in. The recording itself is never uploaded,
+// so when the audio cannot be extracted here the client is told to send it
+// another way.
 const MAX_BYTES_WHEN_DURATION_UNKNOWN = 150 * 1024 * 1024;
 const PROBE_TIMEOUT_MS = 5000;
 // Screen recordings are 30 or 60 fps; 1/30 s lands on a distinct frame either way.
 const FRAME_STEP = 1 / 30;
 
 const TOO_LONG =
-  "This recording is too long for your browser to extract the audio. Your original recording has been saved and our team will extract it.";
+  "This recording is too long for your browser to extract the audio, so only the moments you capture will be sent. If the audio matters, please record a shorter clip of it or contact our office.";
 const TOO_LARGE =
-  "This recording is too large for your browser to extract the audio. Your original recording has been saved and our team will extract it.";
+  "This recording is too large for your browser to extract the audio, so only the moments you capture will be sent. If the audio matters, please record a shorter clip of it or contact our office.";
 const NO_AUDIO =
-  "We could not read an audio track from this recording in your browser. Your original recording has been saved and our team will review it directly.";
+  "We could not read an audio track from this recording in your browser, so only the moments you capture will be sent. If the audio matters, please contact our office.";
 
 type Probe = { status: "pending" } | { status: "known"; duration: number } | { status: "unknown" };
 
@@ -50,11 +52,12 @@ let nextStillId = 1;
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
 
 /**
- * "Capture the moment that shows the violation." The full recording is already
- * on its way to storage. Here the client scrubs to the frames that matter (the
+ * "Capture the moment that shows the violation." The recording itself never
+ * leaves the device: here the client scrubs to the frames that matter (the
  * caller ID, the timestamp, the message on screen) and captures them as
  * images, while the recording's audio track is extracted as an MP3 in the
- * background. Mount one instance per recording (key it by the item).
+ * background — those are what get submitted. Mount one instance per recording
+ * (key it by the item).
  */
 export default function VideoEvidenceDialog({ item, index, total, onSave, onSkip }: Props) {
   const [probe, setProbe] = useState<Probe>({ status: "pending" });
@@ -162,10 +165,10 @@ export default function VideoEvidenceDialog({ item, index, total, onSave, onSkip
   return (
     <Modal open eyebrow={eyebrow} title="Capture the moment that shows the violation" size="lg">
       <p className="text-sm leading-relaxed text-muted">
-        Your full recording has been saved exactly as it is. To help our team, move the recording
-        to the moment that shows the violation — the caller ID, the date and time, or the message
-        on screen — and capture it as an image. You may capture more than one moment. The
-        recording&rsquo;s audio is also extracted and saved alongside it.
+        The recording itself stays on your device. Move it to the moment that shows the
+        violation — the caller ID, the date and time, or the message on screen — and capture it
+        as an image. You may capture more than one moment. The recording&rsquo;s audio is
+        extracted and sent along with your captures.
       </p>
 
       {item.previewUrl && !videoBroken && (
@@ -195,8 +198,8 @@ export default function VideoEvidenceDialog({ item, index, total, onSave, onSkip
       {videoBroken && (
         <p className="mt-4 rounded-sm border border-bone-dark bg-white px-4 py-3 text-xs leading-relaxed text-muted">
           Your browser cannot play this recording (often an iPhone &ldquo;High Efficiency&rdquo;
-          video), so frames cannot be captured here. Your original recording has been saved and
-          our team will capture the relevant frames.
+          video), so frames cannot be captured here. Please take screenshots of the relevant
+          moments on your device and upload those instead, or contact our office.
         </p>
       )}
 
@@ -276,7 +279,7 @@ export default function VideoEvidenceDialog({ item, index, total, onSave, onSkip
         {audioState.name === "done" && (
           <p className="flex items-center gap-2 text-ink">
             <CheckCircleIcon className="h-4 w-4 text-emerald-700" />
-            Audio track ready ({fmtSize(audioState.blob.size)} MP3) — it will be saved with your
+            Audio track ready ({fmtSize(audioState.blob.size)} MP3) — it will be sent with your
             captures.
           </p>
         )}
@@ -296,11 +299,13 @@ export default function VideoEvidenceDialog({ item, index, total, onSave, onSkip
           )}
         </Btn>
         <Btn variant="outline" onClick={onSkip}>
-          Skip this step
+          Skip — send nothing from this recording
         </Btn>
       </div>
       {!canSave && !audioBusy && (
-        <p className="mt-3 text-xs text-muted">Capture at least one moment to continue, or skip.</p>
+        <p className="mt-3 text-xs text-muted">
+          Capture at least one moment to continue. Skipping sends nothing from this recording.
+        </p>
       )}
     </Modal>
   );

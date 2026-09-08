@@ -9,6 +9,7 @@ import {
   LIMITS,
   resolveContentType,
   type DetectedCapture,
+  type SourceRecording,
 } from "@/lib/submissions/shared";
 import {
   confirmCapture,
@@ -19,20 +20,23 @@ import DateConfirmDialog, { type DateAnswer } from "./DateConfirmDialog";
 import Dropzone from "./Dropzone";
 import FileList from "./FileList";
 import VideoEvidenceDialog, { type VideoEvidenceResult } from "./VideoEvidenceDialog";
-import { AlertIcon, CheckCircleIcon, CloseIcon, SpinnerIcon } from "./icons";
+import { AlertIcon, CheckCircleIcon, ClockIcon, CloseIcon, SpinnerIcon } from "./icons";
 import type { QueueItem, ReviewTask } from "./types";
 
 /**
  * The client-facing evidence upload flow for one contact.
  *
- *  - Files are queued the moment they are picked and uploaded one at a time,
- *    each straight to storage, untouched (see lib/submissions/upload-client).
+ *  - Screenshots and audio files are queued the moment they are picked and
+ *    uploaded one at a time, each straight to storage, untouched (see
+ *    lib/submissions/upload-client).
+ *  - Screen recordings never upload. They stay on the device ("local") while
+ *    the client captures the frames that show the violation (sent as PNGs)
+ *    and the audio track is extracted (sent as an MP3); those derived files
+ *    carry the recording's description and the client's date answer.
  *  - In parallel, the browser reads each file's capture date and the client
- *    is walked through one review dialog per file: confirm the date, and for
- *    screen recordings, capture the frames that show the violation (saved as
- *    PNGs) while the audio track is extracted (saved as an MP3).
+ *    is walked through one review dialog per file.
  *  - Nothing waits on the dialogs: an abandoned review still leaves the
- *    files safely uploaded.
+ *    screenshots and audio files safely uploaded.
  *
  * The queue lives in a ref that is updated synchronously alongside React
  * state, so the upload pump can read it without waiting for a render.
@@ -80,16 +84,36 @@ const QUEUED = {
   attempts: 0,
 } as const;
 
-/** Is this queued item allowed to upload yet? Derived files wait for their recording. */
+/**
+ * Is this queued item allowed to upload yet? Recordings stay on the device
+ * ("local"), so anything derived from one is ready at once; the wait/fail
+ * states only apply to legacy parents that were themselves uploaded.
+ */
 function readiness(
   item: QueueItem,
   all: QueueItem[],
 ): "ready" | "waiting" | "parent-failed" {
   if (!item.parentLocalId) return "ready";
   const parent = all.find((p) => p.localId === item.parentLocalId);
-  if (!parent || parent.upload.status === "done") return "ready";
+  if (!parent || parent.upload.status === "done" || parent.upload.status === "local") {
+    return "ready";
+  }
   if (parent.upload.status === "failed" && !parent.upload.retryable) return "parent-failed";
   return "waiting";
+}
+
+/** The recording a derived file came from, as the server records it. */
+async function describeRecording(
+  parent: QueueItem,
+  capture: Promise<DetectedCapture> | undefined,
+): Promise<SourceRecording> {
+  return {
+    name: parent.name,
+    contentType: parent.contentType,
+    size: parent.size,
+    clientLastModified: parent.lastModified ? new Date(parent.lastModified).toISOString() : null,
+    capture: (await capture) ?? NO_CAPTURE,
+  };
 }
 
 export default function SubmissionPortal({ contactId, previouslyReceived }: Props) {
@@ -160,7 +184,9 @@ export default function SubmissionPortal({ contactId, previouslyReceived }: Prop
           contentType: item.contentType,
           lastModified: item.lastModified,
           capture,
-          derivedFrom: parent?.upload.fileId ?? null,
+          sourceRecording: parent
+            ? await describeRecording(parent, captureRef.current.get(parent.localId))
+            : null,
           clip: item.clip,
           frameAtSeconds: item.frameAtSeconds,
           // A retry reuses the record from the failed attempt when it still exists.
@@ -258,13 +284,16 @@ export default function SubmissionPortal({ contactId, previouslyReceived }: Prop
           );
           continue;
         }
-        if (budget <= 0) {
-          rejected.push(
-            `"${file.name}" was not added — this link has reached its limit of ${LIMITS.maxFilesPerContact} files. Please contact our office to send more.`,
-          );
-          continue;
+        // A recording never uploads, so it costs nothing against the limit.
+        if (kind !== "video") {
+          if (budget <= 0) {
+            rejected.push(
+              `"${file.name}" was not added — this link has reached its limit of ${LIMITS.maxFilesPerContact} files. Please contact our office to send more.`,
+            );
+            continue;
+          }
+          budget--;
         }
-        budget--;
 
         const id = newLocalId();
         fresh.push({
@@ -277,7 +306,8 @@ export default function SubmissionPortal({ contactId, previouslyReceived }: Prop
           kind,
           previewUrl: trackUrl(file),
           capture: null,
-          upload: QUEUED,
+          // Recordings stay on the device; only what is captured from them is sent.
+          upload: kind === "video" ? { ...QUEUED, status: "local" } : QUEUED,
           confirmation: null,
           parentLocalId: null,
           clip: null,
@@ -373,9 +403,16 @@ export default function SubmissionPortal({ contactId, previouslyReceived }: Prop
 
   const onDateAnswer = (answer: DateAnswer) => {
     if (!currentItem) return;
-    patchItem(currentItem.localId, () => ({
-      confirmation: { ...answer, sent: false, attempts: 0, nextAttemptAt: 0, error: null },
-    }));
+    const confirmation = { ...answer, sent: false, attempts: 0, nextAttemptAt: 0, error: null };
+    // The answer is about the recording; the frames and audio taken from it
+    // are what actually reach the server, so they carry it.
+    commit((prev) =>
+      prev.map((it) =>
+        it.localId === currentItem.localId || it.parentLocalId === currentItem.localId
+          ? { ...it, confirmation }
+          : it,
+      ),
+    );
     finishTask();
   };
 
@@ -392,7 +429,10 @@ export default function SubmissionPortal({ contactId, previouslyReceived }: Prop
       previewUrl: trackUrl(partial.blob),
       capture: parent.capture,
       upload: QUEUED,
-      confirmation: null,
+      // The client already answered the date question for the recording.
+      confirmation: parent.confirmation
+        ? { ...parent.confirmation, sent: false, attempts: 0, nextAttemptAt: 0, error: null }
+        : null,
       parentLocalId: parent.localId,
       clipStatus: null,
       ...partial,
@@ -460,25 +500,27 @@ export default function SubmissionPortal({ contactId, previouslyReceived }: Prop
   // ---- status ---------------------------------------------------------------
 
   const stats = useMemo(() => {
-    const done = items.filter((it) => it.upload.status === "done").length;
-    const failed = items.filter((it) => it.upload.status === "failed").length;
+    // Recordings stay on the device: they are neither sent nor counted.
+    const sent = items.filter((it) => it.upload.status !== "local");
+    const done = sent.filter((it) => it.upload.status === "done").length;
+    const failed = sent.filter((it) => it.upload.status === "failed").length;
     // Queued derived files whose recording failed are parked, not in progress.
-    const active = items.filter(
+    const active = sent.filter(
       (it) =>
         it.upload.status === "uploading" ||
         (it.upload.status === "queued" && readiness(it, items) !== "waiting"),
     ).length;
-    const unsentAnswers = items.filter(
+    const unsentAnswers = sent.filter(
       (it) => it.confirmation && !it.confirmation.sent && it.upload.status !== "failed",
     ).length;
     const progress =
-      items.length === 0
+      sent.length === 0
         ? 0
-        : items.reduce(
+        : sent.reduce(
             (sum, it) => sum + (it.upload.status === "done" ? 1 : it.upload.progress),
             0,
-          ) / items.length;
-    return { total: items.length, done, failed, active, unsentAnswers, progress };
+          ) / sent.length;
+    return { total: sent.length, done, failed, active, unsentAnswers, progress };
   }, [items]);
 
   const uploading = stats.active > 0;
@@ -495,7 +537,11 @@ export default function SubmissionPortal({ contactId, previouslyReceived }: Prop
   }, [workPending]);
 
   const complete =
-    items.length > 0 && !workPending && stats.failed === 0 && !currentTask;
+    stats.total > 0 && !workPending && stats.failed === 0 && !currentTask;
+  // Only recordings were added and nothing was captured from them: nothing
+  // has reached us, and the client should know that.
+  const nothingSent =
+    items.length > 0 && stats.total === 0 && !currentTask;
 
   return (
     <>
@@ -555,7 +601,12 @@ export default function SubmissionPortal({ contactId, previouslyReceived }: Prop
           {items.length > 0 && (
             <div className="mt-6">
               <p className="mb-3 flex items-center gap-2 text-sm font-medium text-ink">
-                {uploading ? (
+                {stats.total === 0 ? (
+                  <>
+                    <ClockIcon className="h-4 w-4 text-gold-deep" />
+                    Nothing sent yet — capture the moments from your recording to submit them
+                  </>
+                ) : uploading ? (
                   <>
                     <SpinnerIcon className="h-4 w-4 text-gold-deep" />
                     Uploading {Math.min(stats.done + stats.failed + 1, stats.total)} of{" "}
@@ -602,6 +653,14 @@ export default function SubmissionPortal({ contactId, previouslyReceived }: Prop
                 may return to this page at any time to add more.
               </p>
             </div>
+          )}
+
+          {nothingSent && (
+            <p className="mt-4 rounded-sm border border-gold/40 bg-gold/10 px-4 py-3 text-sm leading-relaxed text-ink">
+              Screen recordings are not sent as files. Nothing has reached our office yet — add
+              the recording again and capture the moments that show the violation, or send
+              screenshots instead.
+            </p>
           )}
 
           {workPending && (

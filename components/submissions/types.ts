@@ -6,7 +6,11 @@ import type {
 
 /** One file in the portal's queue — the browser-side view of a submission. */
 
-export type UploadStatus = "queued" | "uploading" | "done" | "failed";
+/**
+ * "local": the file stays on the client's device and is never sent — screen
+ * recordings, whose captured frames and audio track are what gets submitted.
+ */
+export type UploadStatus = "queued" | "uploading" | "done" | "failed" | "local";
 
 export type UploadState = {
   status: UploadStatus;
