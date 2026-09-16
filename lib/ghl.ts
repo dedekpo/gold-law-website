@@ -64,6 +64,59 @@ async function lookupContact(contactId: string): Promise<ContactCheck> {
   }
 }
 
+export type ContactProfile = {
+  name: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+};
+
+/**
+ * The contact's name and reach details, for the office notification. Null
+ * when GHL cannot be asked or has no such contact; never throws.
+ */
+export async function fetchContactProfile(contactId: string): Promise<ContactProfile | null> {
+  const creds = credentials();
+  if (!creds) return null;
+  try {
+    const res = await fetch(`${GHL_BASE_URL}/contacts/${encodeURIComponent(contactId)}`, {
+      headers: {
+        Authorization: `Bearer ${creds.token}`,
+        Version: GHL_API_VERSION,
+        Accept: "application/json",
+      },
+      cache: "no-store",
+      signal: AbortSignal.timeout(8000),
+    });
+    if (!res.ok) return null;
+    const body = (await res.json()) as {
+      contact?: {
+        contactName?: unknown;
+        firstName?: unknown;
+        lastName?: unknown;
+        email?: unknown;
+        phone?: unknown;
+      };
+    };
+    const c = body.contact;
+    if (!c) return null;
+    const str = (v: unknown) => (typeof v === "string" ? v.trim() : "");
+    const firstName = str(c.firstName);
+    const lastName = str(c.lastName);
+    return {
+      name: str(c.contactName) || [firstName, lastName].filter(Boolean).join(" ") || contactId,
+      firstName,
+      lastName,
+      email: str(c.email),
+      phone: str(c.phone),
+    };
+  } catch (err) {
+    console.error("[submissions:ghl] contact profile lookup errored", err);
+    return null;
+  }
+}
+
 /**
  * Verify a submission link's contact, using the cached confirmation when it is
  * fresh. A GHL outage never invalidates a contact that was confirmed before.

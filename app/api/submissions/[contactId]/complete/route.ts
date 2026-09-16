@@ -9,7 +9,14 @@ import {
   validContactId,
 } from "@/lib/submissions/api";
 import { LIMITS, type CompleteResponse } from "@/lib/submissions/shared";
-import { consumeRateLimit, getFile, ipKey, markUploaded } from "@/lib/submissions/store";
+import { notifyNewEvidence } from "@/lib/submissions/notify";
+import {
+  consumeRateLimit,
+  contactSummary,
+  getFile,
+  ipKey,
+  markUploaded,
+} from "@/lib/submissions/store";
 import { inspectObject } from "@/lib/submissions/storage";
 
 /**
@@ -17,6 +24,12 @@ import { inspectObject } from "@/lib/submissions/storage";
  * Verify the object really landed in the bucket with the size we authorised,
  * then mark the record uploaded. Idempotent: a retried call on an already
  * uploaded file just returns its status.
+ *
+ * The first file of a submission session (decided inside markUploaded's
+ * transaction, so exactly one file per session qualifies) also notifies the
+ * office through GHL — see lib/submissions/notify.ts. The notification is
+ * awaited so the serverless function does not exit before it is sent, but a
+ * failure never fails the upload.
  */
 export async function POST(
   request: NextRequest,
@@ -59,12 +72,19 @@ export async function POST(
         "size_mismatch",
       );
     }
-    await markUploaded(doc, {
+    const marked = await markUploaded(doc, {
       size: stored.size,
       md5: stored.md5,
       crc32c: stored.crc32c,
       contentType: stored.contentType,
     });
+    if (marked.opensSession) {
+      const summary = await contactSummary(contactId).catch(() => null);
+      await notifyNewEvidence(contactId, {
+        fileCount: marked.fileCount,
+        sessionCount: summary?.sessionCount,
+      });
+    }
     const response: CompleteResponse = { ok: true, fileId, status: "uploaded" };
     return NextResponse.json(response);
   } catch (err) {

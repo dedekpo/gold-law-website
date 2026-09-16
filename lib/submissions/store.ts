@@ -64,26 +64,57 @@ export async function getFile(
 }
 
 /**
+ * Quiet window that separates two submission sessions. A file uploaded more
+ * than this long after the contact's previous upload opens a new session
+ * (and a notification); anything sooner belongs to the session in progress,
+ * however long that session has been running.
+ */
+export function sessionGapMs(): number {
+  const minutes = Number(process.env.EVIDENCE_SESSION_GAP_MINUTES ?? 60);
+  return (Number.isFinite(minutes) && minutes > 0 ? minutes : 60) * 60_000;
+}
+
+/** Pure rule, exported for tests: does an upload at `now` open a new session? */
+export function opensSession(previousUploadAt: string | undefined, now: string, gapMs: number): boolean {
+  if (!previousUploadAt) return true;
+  const previous = Date.parse(previousUploadAt);
+  if (!Number.isFinite(previous)) return true;
+  return Date.parse(now) - previous > gapMs;
+}
+
+export type MarkUploadedResult = {
+  /** True when this file is the first of a new submission session. */
+  opensSession: boolean;
+  /** The contact's uploaded-file count after this one. */
+  fileCount: number;
+};
+
+/**
  * Flip a pending file to uploaded and roll its size into the contact's
  * counters. Runs in a transaction so a double "complete" (retry after a lost
- * response) cannot count the same file twice.
+ * response) cannot count the same file twice — and, for the same reason,
+ * so that exactly one of several near-simultaneous uploads opens a session.
+ * A file that was already uploaded never opens one.
  */
 export async function markUploaded(
   doc: SubmissionFileDoc,
   verified: NonNullable<SubmissionFileDoc["verified"]>,
-): Promise<void> {
+): Promise<MarkUploadedResult> {
   const now = new Date().toISOString();
   const fileRef = db().collection(FILES).doc(doc.id);
   const contactRef = db().collection(CONTACTS).doc(doc.contactId);
-  await db().runTransaction(async (tx) => {
+  return db().runTransaction(async (tx) => {
     const [fileSnap, contactSnap] = await Promise.all([
       tx.get(fileRef),
       tx.get(contactRef),
     ]);
-    const current = fileSnap.data() as SubmissionFileDoc | undefined;
-    if (!current || current.status === "uploaded") return;
-    tx.update(fileRef, { status: "uploaded", uploadedAt: now, verified });
     const existing = contactSnap.data() as Partial<SubmissionContactDoc> | undefined;
+    const current = fileSnap.data() as SubmissionFileDoc | undefined;
+    if (!current || current.status === "uploaded") {
+      return { opensSession: false, fileCount: existing?.fileCount ?? 0 };
+    }
+    tx.update(fileRef, { status: "uploaded", uploadedAt: now, verified });
+    const newSession = opensSession(existing?.lastUploadAt, now, sessionGapMs());
     tx.set(
       contactRef,
       {
@@ -92,10 +123,30 @@ export async function markUploaded(
         totalBytes: FieldValue.increment(verified.size),
         firstUploadAt: existing?.firstUploadAt ?? now,
         lastUploadAt: now,
+        ...(newSession
+          ? { sessionCount: FieldValue.increment(1), sessionOpenedAt: now }
+          : {}),
       },
       { merge: true },
     );
+    return { opensSession: newSession, fileCount: (existing?.fileCount ?? 0) + 1 };
   });
+}
+
+/** Outcome of the office notification, kept on the contact doc for diagnosis. */
+export async function recordNotification(
+  contactId: string,
+  outcome: { ok: true } | { ok: false; error: string },
+): Promise<void> {
+  await db()
+    .collection(CONTACTS)
+    .doc(contactId)
+    .set(
+      outcome.ok
+        ? { lastNotifiedAt: new Date().toISOString(), lastNotifyError: null }
+        : { lastNotifyError: outcome.error },
+      { merge: true },
+    );
 }
 
 export async function recordConfirmation(

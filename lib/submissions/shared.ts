@@ -238,6 +238,18 @@ export type SubmissionContactDoc = {
   lastUploadAt: string;
   /** ISO — when GHL last confirmed this contact exists (see lib/ghl.ts). */
   ghlVerifiedAt?: string;
+  /**
+   * Submission sessions (see lib/submissions/notify.ts): an upload opens a
+   * new session when the gap since the previous upload exceeds the quiet
+   * window; only the file that opens a session notifies the office.
+   */
+  sessionCount?: number;
+  /** ISO — when the current session opened. */
+  sessionOpenedAt?: string;
+  /** ISO — when the office was last notified (webhook accepted). */
+  lastNotifiedAt?: string;
+  /** Last webhook failure, kept for diagnosis; cleared on the next success. */
+  lastNotifyError?: string | null;
 };
 
 /**
