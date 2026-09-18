@@ -88,7 +88,11 @@ export default async function SubmissionsPage({
 
   return (
     <>
-      <PageBanner title="Evidence Submission" subtitle="Secure client upload portal" />
+      <PageBanner
+        title="Evidence Submission"
+        subtitle="Secure client upload portal"
+        subtitleSize="lg"
+      />
 
       <section className="bg-bone">
         <div className="mx-auto max-w-6xl px-4 py-12 lg:py-16">
@@ -96,12 +100,14 @@ export default async function SubmissionsPage({
             <div>
               <p className="mb-6 max-w-2xl text-base leading-relaxed text-muted">
                 Use this page to send Gold Law, P.A. the screenshots, screen recordings, and
-                voicemail recordings related to your matter. Files are transmitted over an
-                encrypted connection and stored exactly as they exist on your device, so the
-                original date and time information they contain is preserved for the
-                investigation.
+                voicemail recordings related to your matter.
               </p>
               <SubmissionPortal contactId={contactId} previouslyReceived={previouslyReceived} />
+              <p className="mt-4 border-t border-bone-dark pt-3 text-[11px] leading-relaxed text-muted/70">
+                Files submitted through this page are transmitted over an encrypted connection
+                and stored exactly as they exist on your device, so the original date and time
+                information they contain is preserved for the investigation.
+              </p>
             </div>
 
             <aside className="space-y-6">

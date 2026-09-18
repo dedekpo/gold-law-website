@@ -1,9 +1,11 @@
 type PageBannerProps = {
   title: string;
   subtitle?: string;
+  /** "lg" for pages where the subtitle is the point (e.g. the client portal). */
+  subtitleSize?: "sm" | "lg";
 };
 
-export default function PageBanner({ title, subtitle }: PageBannerProps) {
+export default function PageBanner({ title, subtitle, subtitleSize = "sm" }: PageBannerProps) {
   return (
     <section
       className="relative bg-cover bg-center"
@@ -16,7 +18,15 @@ export default function PageBanner({ title, subtitle }: PageBannerProps) {
         </h1>
         <div className="mx-auto mt-6 h-px w-16 bg-gold" aria-hidden="true" />
         {subtitle && (
-          <p className="mt-5 text-sm uppercase tracking-[0.22em] text-gold-pale/80">{subtitle}</p>
+          <p
+            className={
+              subtitleSize === "lg"
+                ? "mt-6 text-lg uppercase tracking-[0.22em] text-gold-pale lg:text-xl"
+                : "mt-5 text-sm uppercase tracking-[0.22em] text-gold-pale/80"
+            }
+          >
+            {subtitle}
+          </p>
         )}
       </div>
     </section>
